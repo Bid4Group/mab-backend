@@ -5,10 +5,9 @@ export default class User extends Model {
 
     public firstname: string;
     public lastname: string;
-    public username: string; // @ symbol
-    public password: string;
+    public phonenumber: string;
     public email: string;
-    public avatar: string;
+    public company: string;
 
     constructor(user?: User) {
         super();
@@ -17,10 +16,9 @@ export default class User extends Model {
         if (user) {
             this.firstname = user.firstname;
             this.lastname = user.lastname;
-            this.username = user.username;
-            this.password = user.password;
+            this.phonenumber = user.phonenumber;
             this.email = user.email;
-            this.avatar = user.avatar;
+            this.company = user.company;
         }
     }
 }

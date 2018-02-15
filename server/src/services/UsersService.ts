@@ -3,6 +3,7 @@ import { IWhereFilter } from '../databases/engine/filter/WhereFilter';
 import { Operator } from '../databases/engine/filter/Operator';
 
 import User from '../models/User';
+import { EmailService } from './EmailService';
 
 class UsersService {
   private mysql: MySqlRepository;
@@ -11,12 +12,19 @@ class UsersService {
       this.mysql = new MySqlRepository();
   }
   
-  addUser(user: User): Promise<void> {
+  public addUser(user: User): Promise<void> {
     return null;
   }
 
   private sendEmail(user) {
-    
+    if (user) {
+        let emailService = new EmailService();
+        emailService.sendMail(user);
+        return this.mysql.create(user, user._type).then(rowset => {
+            console.log(rowset);
+            return rowset;
+        });
+    }
   }
 
   getUsersById(ids: number[]): Promise<User[]> {

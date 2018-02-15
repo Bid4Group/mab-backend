@@ -1,10 +1,10 @@
 import config from '../config/config';{}
+import User from '../models/User';
 
 var nodemailer = require('nodemailer');
 
-export class Mailer {
+export class EmailService {
   transporter: any;
-  mailOptions: any;
 
   constructor() {
     this.transporter = nodemailer.createTransport({
@@ -14,22 +14,29 @@ export class Mailer {
         pass: config.server.mail
       }
     });
-    
-    this.mailOptions = {
-      from: config.server.mailFrom,
-      to: config.server.mailTo,
-      subject: 'Sending Email using Node.js',
-      text: 'That was easy!'
-    };
   }
 
-  public sendMail(user) {
-    this.transporter.sendMail(this.mailOptions, function(error, info){
-      if (error) {
-        console.log(error);
-      } else {
-        console.log('Email sent: ' + info.response);
-      }
-    });
+  public sendMail(user: User) {
+    if (user) {
+      let mailOptions = {
+        from: config.server.mailFrom,
+        to: config.server.mailTo,
+        subject: `User Registration Mail for: ${user.firstname}, ${user.lastname}`,
+        text: `The following user: ${user.firstname}, ${user.lastname} wants to register.\n
+                Company: ${user.company}\n
+                Phone number: ${user.phonenumber}\n
+                Email: ${user.email}`
+      };
+  
+      this.transporter.sendMail(mailOptions, function(error, info){
+        if (error) {
+          console.log(error);
+        } else {
+          console.log('Email sent: ' + info.response);
+        }
+      });
+    } else {
+      console.log("User could not be found!");
+    }
   }
 }

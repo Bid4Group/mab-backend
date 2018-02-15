@@ -1,0 +1,23 @@
+# General configuration for the application
+[app]
+name = "mab-server"
+environment = "development" # "development" or "production"
+
+[server]
+    [api]
+    version = 1
+    root =  "/api"
+    host = "localhost"
+    port =  3001
+    routes = ["users"]
+
+    [database]
+    # Database configuration
+        [database.mysql]
+        baseurl = "localhost"
+        protocol = "http://"
+        host = "127.0.0.1"
+        port = "3306"
+        database = "MAB"
+        user = "myuser"
+        password = "mypassword"

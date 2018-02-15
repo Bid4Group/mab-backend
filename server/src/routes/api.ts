@@ -14,12 +14,12 @@ import { Router, Request, Response, NextFunction } from 'express';
 
 import { logger } from '../services/LoggerService';
 import UsersService from '../services/UsersService';
+import User from '../models/User';
 
 export class ApiRouter {
     router: Router;
 
     // Config Parameters
-    quotesRoute: string;
     usersRoute: string;
 
     constructor() {
@@ -46,10 +46,11 @@ export class ApiRouter {
     /** Get all quotes */
     public postUser(req: Request, res: Response, next: NextFunction) {
         res.header('Access-Control-Allow-Origin', '*');
-        // or like this -> let quotes: Quote = <Quote>req.body;
-        UsersService.saveUser().then(quotes => {
-            logger.debug(JSON.stringify(quotes, null, 2));
-            res.status(200).json(quotes);
+
+        let user: User = <User>req.body;
+        UsersService.addUser(user).then(status => {
+            logger.debug(JSON.stringify(status, null, 2));
+            res.status(200).json(status);
         });
     }
 
@@ -59,10 +60,12 @@ export class ApiRouter {
         // Authentication middleware provided by express-jwt.
         // This middleware will check incoming requests for a valid
         // JWT on any routes that it is applied to.
-        let authCheck = jwt({
-            secret: new Buffer(config.oauth.secret, 'base64'),
-            audience: config.oauth.client
-        });
+        if (config.oauth) {
+            let authCheck = jwt({
+                secret: new Buffer(config.oauth.secret, 'base64'),
+                audience: config.oauth.client
+            });
+        }
 
         this.router.get("/", this.getTest);
 

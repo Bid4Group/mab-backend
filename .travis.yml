@@ -1,0 +1,12 @@
+language: node_js
+node_js:
+  - "stable"
+
+before_script:
+  - (cd server && npm i)
+  - (cd server && npm i -g gulp)
+  - (cd client && npm i)
+
+script:
+  - (cd server && npm start)
+  - (cd client && npm start)
